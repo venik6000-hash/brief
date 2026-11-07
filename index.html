@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Бриф на сайт</title>
+<meta name="theme-color" content="#f6f5f2">
+<style>
+  :root {
+    --bg: #f6f5f2;
+    --card: #ffffff;
+    --ink: #1b1b1f;
+    --muted: #6b6b76;
+    --line: #e4e2dc;
+    --accent: #2f5bea;
+    --accent-ink: #ffffff;
+    --accent-soft: #e8eeff;
+    --danger: #c43d3d;
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121214;
+      --card: #1c1c20;
+      --ink: #f1f1f3;
+      --muted: #9a9aa6;
+      --line: #2e2e35;
+      --accent: #6d8dff;
+      --accent-ink: #0d0d12;
+      --accent-soft: #23294a;
+      --danger: #ff7a7a;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 20px 16px calc(110px + env(safe-area-inset-bottom)); }
+  header { margin-bottom: 18px; }
+  .brand { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+  h1 { font-size: 26px; line-height: 1.2; margin: 0 0 6px; }
+  .lead { color: var(--muted); margin: 0; }
+
+  .progress { display: flex; gap: 6px; margin: 18px 0 6px; }
+  .progress span { flex: 1; height: 5px; border-radius: 3px; background: var(--line); transition: background .25s; }
+  .progress span.on { background: var(--accent); }
+  .step-label { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+
+  .step { display: none; }
+  .step.active { display: block; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  h2 { font-size: 21px; margin: 0 0 16px; }
+
+  .q { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+  .q > label, .q > .label { display: block; font-weight: 600; margin-bottom: 4px; }
+  .hint { font-size: 14px; color: var(--muted); margin: 0 0 10px; }
+  .req::after { content: " *"; color: var(--danger); }
+
+  input[type=text], input[type=tel], input[type=email], textarea {
+    width: 100%; font: inherit; color: var(--ink); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 10px; padding: 12px 13px; margin-top: 6px;
+    outline: none; transition: border-color .15s, box-shadow .15s;
+  }
+  textarea { min-height: 92px; resize: vertical; }
+  input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .q.invalid { border-color: var(--danger); }
+  .q.invalid .err { display: block; }
+  .err { display: none; color: var(--danger); font-size: 14px; margin-top: 6px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .chip { position: relative; }
+  .chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .chip span {
+    display: inline-block; padding: 9px 14px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--bg); cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .chip input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .chip input:focus-visible + span { box-shadow: 0 0 0 3px var(--accent-soft); }
+  .other { margin-top: 10px; }
+
+  .drop {
+    display: block; border: 1.5px dashed var(--line); border-radius: 12px; padding: 18px; text-align: center;
+    color: var(--muted); cursor: pointer; margin-top: 8px; background: var(--bg);
+  }
+  .drop strong { color: var(--accent); }
+  .drop input { display: none; }
+  .files { list-style: none; padding: 0; margin: 10px 0 0; }
+  .files li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; margin-top: 6px; font-size: 14px; }
+  .files li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .files button { border: 0; background: none; color: var(--danger); font: inherit; cursor: pointer; padding: 4px; }
+
+  .nav {
+    position: fixed; left: 0; right: 0; bottom: 0; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--line);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+  .nav-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; }
+  .btn { flex: 1; font: inherit; font-weight: 600; border-radius: 12px; padding: 14px 16px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); flex: 2; }
+  .btn:disabled { opacity: .6; cursor: default; }
+  .btn[hidden] { display: none; }
+
+  .consent { font-size: 13px; color: var(--muted); margin: 6px 2px 0; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .done { text-align: center; padding: 48px 8px; }
+  .done .ok { width: 64px; height: 64px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; margin: 0 auto 16px; font-size: 32px; }
+  .toast { position: fixed; left: 16px; right: 16px; bottom: calc(90px + env(safe-area-inset-bottom)); max-width: 608px; margin: 0 auto; background: var(--ink); color: var(--bg); padding: 12px 14px; border-radius: 12px; font-size: 14px; display: none; }
+  .toast.show { display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="brand" id="brandName">Разработка сайтов</p>
+    <h1>Бриф на сайт</h1>
+    <p class="lead">5 коротких шагов, около 4 минут. Где не знаете ответа, пропускайте: уточним при созвоне.</p>
+  </header>
+
+  <div class="progress" id="progress"></div>
+  <div class="step-label" id="stepLabel"></div>
+
+  <form id="form" novalidate>
+    <div class="hp" aria-hidden="true"><label>Сайт <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+    <!-- ШАГ 1 -->
+    <section class="step" data-title="Знакомство">
+      <h2>Давайте знакомиться</h2>
+      <div class="q" data-required="company">
+        <label class="req" for="company">Название компании</label>
+        <input id="company" name="company" type="text" autocomplete="organization" placeholder="ООО «Ромашка» или как вас знают клиенты">
+        <div class="err">Укажите название</div>
+      </div>
+      <div class="q" data-required="name">
+        <label class="req" for="name">Ваше имя</label>
+        <input id="name" name="name" type="text" autocomplete="name">
+        <div class="err">Как к вам обращаться?</div>
+      </div>
+      <div class="q" data-required="contact">
+        <label class="req" for="contact">Телефон или Telegram для связи</label>
+        <input id="contact" name="contact" type="text" inputmode="text" autocomplete="tel" placeholder="+7 900 000-00-00 или @username">
+        <div class="err">Нужен хотя бы один контакт</div>
+      </div>
+      <div class="q">
+        <label for="city">Где вы работаете?</label>
+        <input id="city" name="city" type="text" placeholder="Город, регион или «по всей России»">
+      </div>
+    </section>
+
+    <!-- ШАГ 2 -->
+    <section class="step" data-title="О бизнесе">
+      <h2>О вашем бизнесе</h2>
+      <div class="q" data-required="about">
+        <label class="req" for="about">Чем занимаетесь и что продаёте в первую очередь?</label>
+        <p class="hint">Пару предложений, как рассказали бы знакомому.</p>
+        <textarea id="about" name="about" placeholder="Например: ремонт квартир под ключ, главное — комплексный ремонт и дизайн-проект"></textarea>
+        <div class="err">Расскажите хотя бы в двух словах</div>
+      </div>
+      <div class="q">
+        <label for="audience">Кто ваши клиенты?</label>
+        <textarea id="audience" name="audience" placeholder="Например: семьи 30–45 лет с новостройкой; малый бизнес"></textarea>
+      </div>
+      <div class="q">
+        <div class="label">Почему выбирают именно вас?</div>
+        <p class="hint">Можно несколько.</p>
+        <div class="chips" data-name="advantages" data-type="checkbox" data-options="Цена|Скорость|Качество|Опыт и годы на рынке|Гарантия|Индивидуальный подход|Сервис и забота|Уникальный продукт"></div>
+        <textarea class="other" name="advantages_note" placeholder="Подробнее, цифры, факты (необязательно): 12 лет на рынке, 800+ объектов…"></textarea>
+      </div>
+    </section>
+
+    <!-- ШАГ 3 -->
+    <section class="step" data-title="Задача сайта">
+      <h2>Что должен делать сайт</h2>
+      <div class="q">
+        <div class="label">Что должен сделать посетитель?</div>
+        <div class="chips" data-name="goal" data-type="checkbox" data-options="Оставить заявку|Позвонить|Написать в мессенджер|Записаться онлайн|Купить на сайте|Просто узнать о компании"></div>
+      </div>
+      <div class="q">
+        <div class="label">Какие разделы нужны?</div>
+        <p class="hint">Типовые уже отмечены, уберите лишнее.</p>
+        <div class="chips" data-name="sections" data-type="checkbox" data-options="Услуги|О компании|Наши работы|Отзывы|Цены|Вопросы и ответы|Контакты|Команда|Сертификаты|Акции|Блог|Вакансии" data-checked="Услуги|О компании|Наши работы|Отзывы|Контакты"></div>
+      </div>
+      <div class="q">
+        <div class="label">Нужные функции</div>
+        <div class="chips" data-name="features" data-type="checkbox" data-options="Форма заявки|Онлайн-запись|Каталог товаров|Оплата на сайте|Калькулятор стоимости|Квиз-опрос|Кнопки мессенджеров|Карта" data-checked="Форма заявки|Кнопки мессенджеров"></div>
+        <input class="other" type="text" name="features_other" placeholder="Что-то ещё?">
+      </div>
+      <div class="q">
+        <div class="label">Языки сайта</div>
+        <div class="chips" data-name="languages" data-type="checkbox" data-options="Русский|Английский|Другой" data-checked="Русский"></div>
+      </div>
+    </section>
+
+    <!-- ШАГ 4 -->
+    <section class="step" data-title="Стиль">
+      <h2>Как сайт должен выглядеть</h2>
+      <div class="q">
+        <div class="label">Настроение</div>
+        <p class="hint">Выберите 1–2 варианта.</p>
+        <div class="chips" data-name="mood" data-type="checkbox" data-options="Строгий и деловой|Премиальный|Яркий и смелый|Минимализм|Дружелюбный и тёплый|Технологичный"></div>
+      </div>
+      <div class="q">
+        <label for="likes">Сайты, которые нравятся</label>
+        <p class="hint">Ссылки и что именно нравится. Можно сайты конкурентов.</p>
+        <textarea id="likes" name="likes" placeholder="example.ru — нравятся крупные фото и простая навигация"></textarea>
+      </div>
+      <div class="q">
+        <div class="label">Логотип и фирменный стиль</div>
+        <div class="chips" data-name="brand" data-type="radio" data-options="Есть логотип и фирменные цвета|Есть только логотип|Ничего нет, нужна помощь"></div>
+        <input class="other" type="text" name="colors" placeholder="Фирменные цвета, если знаете: синий, белый…">
+      </div>
+    </section>
+
+    <!-- ШАГ 5 -->
+    <section class="step" data-title="Материалы и сроки">
+      <h2>Материалы и сроки</h2>
+      <div class="q">
+        <label for="links">Текущий сайт и соцсети</label>
+        <textarea id="links" name="links" placeholder="Ссылки на сайт, Instagram, VK, Telegram, Яндекс Карты…"></textarea>
+      </div>
+      <div class="q">
+        <div class="label">Что из материалов уже есть?</div>
+        <div class="chips" data-name="materials" data-type="checkbox" data-options="Тексты|Фото|Видео|Отзывы клиентов|Примеры работ|Сертификаты и лицензии|Пока ничего"></div>
+      </div>
+      <div class="q">
+        <div class="label">Прикрепите файлы</div>
+        <p class="hint">Логотип, фото, презентация. До 10 файлов. Можно пропустить и прислать потом менеджеру.</p>
+        <label class="drop" id="drop">
+          <input type="file" id="fileInput" multiple accept="image/*,.pdf,.svg,.ai,.eps,.doc,.docx,.ppt,.pptx">
+          <strong>Выбрать файлы</strong><br><small>фото с телефона тоже подойдут</small>
+        </label>
+        <ul class="files" id="fileList"></ul>
+      </div>
+      <div class="q">
+        <div class="label">Есть ли домен (адрес сайта)?</div>
+        <div class="chips" data-name="domain" data-type="radio" data-options="Есть|Нет|Не знаю"></div>
+        <input class="other" type="text" name="domain_name" placeholder="Например: romashka.ru">
+      </div>
+      <div class="q">
+        <div class="label">Когда нужен первый вариант?</div>
+        <div class="chips" data-name="deadline" data-type="radio" data-options="Как можно скорее|В течение 2 недель|В течение месяца|Не горит"></div>
+      </div>
+      <div class="q">
+        <label for="notes">Что ещё важно учесть?</label>
+        <textarea id="notes" name="notes" placeholder="Пожелания, опасения, что точно не нужно"></textarea>
+      </div>
+      <p class="consent">Нажимая «Отправить», вы соглашаетесь на обработку указанных данных для подготовки предложения по сайту.</p>
+    </section>
+  </form>
+
+  <section class="done" id="done" hidden>
+    <div class="ok">✓</div>
+    <h2>Спасибо, бриф отправлен!</h2>
+    <p class="lead">Менеджер свяжется с вами, когда изучит ответы.</p>
+  </section>
+</div>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <button type="button" class="btn" id="back">Назад</button>
+    <button type="button" class="btn primary" id="next">Далее</button>
+  </div>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============ НАСТРОЙКИ ============ */
+// URL веб-приложения Google Apps Script (см. ИНСТРУКЦИЯ.md). Пусто = демо-режим: данные не отправляются.
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbwb3rFypuXHCQkIRc00_7MKJcnKK9i8I6t1AZAttsvYAKOYjVTDGYoxq-W-wQ8MtYT5/exec";
+const BRAND = "Разработка сайтов";       // подпись над заголовком
+const MAX_FILES = 10;
+const MAX_TOTAL_MB = 20;                  // общий лимит после сжатия
+const IMG_MAX_SIDE = 2000;                // фото ужимаются до этой стороны
+const FORM_VERSION = "2026-11";
+/* =================================== */
+
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const params = new URLSearchParams(location.search);
+const seller = (params.get("m") || "").trim().slice(0, 40);
+const DRAFT_KEY = "brief-draft-v1";
+
+$("#brandName").textContent = BRAND;
+
+// Рендер чипов из data-атрибутов
+$$(".chips").forEach(box => {
+  const name = box.dataset.name, type = box.dataset.type;
+  const checked = new Set((box.dataset.checked || "").split("|").filter(Boolean));
+  box.setAttribute("role", type === "radio" ? "radiogroup" : "group");
+  box.dataset.options.split("|").forEach(opt => {
+    const l = document.createElement("label");
+    l.className = "chip";
+    l.innerHTML = `<input type="${type}" name="${name}"><span></span>`;
+    const input = l.querySelector("input");
+    input.value = opt;
+    input.checked = checked.has(opt);
+    l.querySelector("span").textContent = opt;
+    box.appendChild(l);
+  });
+});
+
+const form = $("#form");
+const steps = $$(".step", form);
+let current = 0;
+let files = []; // {name,type,size,data(base64)}
+
+// Прогресс
+steps.forEach(() => $("#progress").appendChild(document.createElement("span")));
+
+function show(i) {
+  current = i;
+  steps.forEach((s, k) => s.classList.toggle("active", k === i));
+  $$("#progress span").forEach((p, k) => p.classList.toggle("on", k <= i));
+  $("#stepLabel").textContent = `Шаг ${i + 1} из ${steps.length} · ${steps[i].dataset.title}`;
+  $("#back").hidden = i === 0;
+  $("#next").textContent = i === steps.length - 1 ? "Отправить" : "Далее";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function validate(stepEl) {
+  let firstBad = null;
+  $$(".q[data-required]", stepEl).forEach(q => {
+    const f = form.elements[q.dataset.required];
+    const bad = !f.value.trim();
+    q.classList.toggle("invalid", bad);
+    if (bad && !firstBad) firstBad = f;
+  });
+  if (firstBad) { firstBad.focus({ preventScroll: false }); firstBad.scrollIntoView({ block: "center", behavior: "smooth" }); }
+  return !firstBad;
+}
+form.addEventListener("input", e => {
+  const q = e.target.closest(".q.invalid");
+  if (q && e.target.value.trim()) q.classList.remove("invalid");
+  saveDraft();
+});
+form.addEventListener("change", saveDraft);
+
+function collect() {
+  const a = {};
+  for (const el of form.elements) {
+    if (!el.name || el.name === "website" || el.type === "file") continue;
+    if (el.type === "checkbox") { (a[el.name] ||= []); if (el.checked) a[el.name].push(el.value); }
+    else if (el.type === "radio") { if (!(el.name in a)) a[el.name] = ""; if (el.checked) a[el.name] = el.value; }
+    else a[el.name] = el.value.trim();
+  }
+  return a;
+}
+
+function saveDraft() {
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ a: collect(), step: current })); } catch (_) {}
+}
+function loadDraft() {
+  let d; try { d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); } catch (_) {}
+  if (!d || !d.a) return;
+  for (const el of form.elements) {
+    if (!el.name || !(el.name in d.a)) continue;
+    const v = d.a[el.name];
+    if (el.type === "checkbox") el.checked = Array.isArray(v) && v.includes(el.value);
+    else if (el.type === "radio") el.checked = v === el.value;
+    else if (el.type !== "file") el.value = v;
+  }
+  return d.step || 0;
+}
+
+// Файлы
+const fmtMB = b => (b / 1048576).toFixed(1) + " МБ";
+const totalSize = () => files.reduce((s, f) => s + f.size, 0);
+
+function toast(msg, ms = 3500) {
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), ms);
+}
+
+function readAsDataURL(blob) {
+  return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(blob); });
+}
+
+async function shrinkImage(file) {
+  if (!/^image\/(jpeg|png|webp|heic|heif)$/i.test(file.type)) return file;
+  try {
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, IMG_MAX_SIDE / Math.max(bmp.width, bmp.height));
+    if (k === 1 && file.size < 1.5 * 1048576) return file;
+    const c = document.createElement("canvas");
+    c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+    const keepPng = file.type === "image/png" && file.size < 3 * 1048576;
+    const blob = await new Promise(r => c.toBlob(r, keepPng ? "image/png" : "image/jpeg", 0.85));
+    if (!blob) return file;
+    const name = keepPng ? file.name : file.name.replace(/\.\w+$/, "") + ".jpg";
+    return new File([blob], name, { type: blob.type });
+  } catch (_) { return file; }
+}
+
+async function addFiles(list) {
+  for (const raw of list) {
+    if (files.length >= MAX_FILES) { toast(`Не больше ${MAX_FILES} файлов`); break; }
+    const f = await shrinkImage(raw);
+    if (totalSize() + f.size > MAX_TOTAL_MB * 1048576) { toast(`Файлы больше ${MAX_TOTAL_MB} МБ, отправьте остальное менеджеру`); break; }
+    const dataUrl = await readAsDataURL(f);
+    files.push({ name: f.name, type: f.type || "application/octet-stream", size: f.size, data: dataUrl.split(",")[1] });
+  }
+  renderFiles();
+}
+function renderFiles() {
+  const ul = $("#fileList"); ul.innerHTML = "";
+  files.forEach((f, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<span></span><button type="button" aria-label="Удалить">Удалить</button>`;
+    li.querySelector("span").textContent = `${f.name} · ${fmtMB(f.size)}`;
+    li.querySelector("button").onclick = () => { files.splice(i, 1); renderFiles(); };
+    ul.appendChild(li);
+  });
+}
+$("#fileInput").addEventListener("change", e => { addFiles([...e.target.files]); e.target.value = ""; });
+
+// Отправка
+async function submit() {
+  if (form.elements.website.value) { finish(); return; } // бот
+  const btn = $("#next");
+  btn.disabled = true; btn.textContent = files.length ? "Загружаем файлы…" : "Отправляем…";
+  const payload = {
+    meta: {
+      seller,
+      submittedAt: new Date().toISOString(),
+      page: location.href.split("?")[0],
+      userAgent: navigator.userAgent,
+      version: FORM_VERSION
+    },
+    answers: collect(),
+    files
+  };
+  try {
+    if (!ENDPOINT) {
+      console.log("ДЕМО-РЕЖИМ, отправилось бы:", { ...payload, files: files.map(f => ({ name: f.name, size: f.size })) });
+      await new Promise(r => setTimeout(r, 600));
+    } else {
+      // text/plain — без CORS-preflight, Apps Script это принимает
+      const res = await fetch(ENDPOINT, { method: "POST", body: JSON.stringify(payload), headers: { "Content-Type": "text/plain;charset=utf-8" } });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok || !out.ok) throw new Error(out.error || "HTTP " + res.status);
+    }
+    finish();
+  } catch (err) {
+    console.error(err);
+    toast("Не получилось отправить. Проверьте интернет и нажмите ещё раз.", 6000);
+    btn.disabled = false; btn.textContent = "Отправить";
+  }
+}
+function finish() {
+  try { localStorage.removeItem(DRAFT_KEY); } catch (_) {}
+  form.hidden = true; $("#progress").hidden = true; $("#stepLabel").hidden = true; $("#nav").hidden = true;
+  $("header .lead").hidden = true;
+  $("#done").hidden = false;
+  window.scrollTo({ top: 0 });
+}
+
+$("#next").addEventListener("click", () => {
+  if (!validate(steps[current])) return;
+  if (current < steps.length - 1) { show(current + 1); saveDraft(); }
+  else submit();
+});
+$("#back").addEventListener("click", () => { if (current > 0) { show(current - 1); saveDraft(); } });
+form.addEventListener("submit", e => e.preventDefault());
+form.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); $("#next").click(); }
+});
+
+show(Math.min(loadDraft() || 0, steps.length - 1));
+</script>
+</body>
+</html>
